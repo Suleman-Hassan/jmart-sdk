@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jmart_sdk/src/pages/splash/splash.dart';
 import 'pages/onboarding/onboarding.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const OnBoardingScreen(),
+      home: const SplashScreen(),
     );
   }
 }
