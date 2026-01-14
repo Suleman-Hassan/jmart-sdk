@@ -20,9 +20,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   Future<void> _hitApi() async {
     try {
-      final response = await Dio().get(
-        ApiConstants.splashUrl
-      );
+      final response = await Dio().get(ApiConstants.splashUrl);
 
       if (response.statusCode == 200) {
         final respData = response.data;
@@ -37,7 +35,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         if (!mounted) return;
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const SplashScreen()),
-              (_) => false,
+          (_) => false,
         );
       }
     } on DioException catch (e) {
@@ -53,7 +51,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Text(
-         "",
+          "",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
       ),
