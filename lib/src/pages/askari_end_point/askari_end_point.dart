@@ -1,0 +1,20 @@
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
+class AskariEndPoint extends StatefulWidget {
+  const AskariEndPoint({super.key});
+
+  @override
+  State<AskariEndPoint> createState() => _AskariEndPointState();
+}
+
+class _AskariEndPointState extends State<AskariEndPoint> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
