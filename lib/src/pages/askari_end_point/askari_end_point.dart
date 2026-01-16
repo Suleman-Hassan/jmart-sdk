@@ -13,7 +13,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: const Color(0xFFFBC02D)),
       ),
     );
   }
