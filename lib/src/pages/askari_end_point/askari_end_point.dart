@@ -10,10 +10,20 @@ class AskariEndPoint extends StatefulWidget {
 
 class _AskariEndPointState extends State<AskariEndPoint> {
   @override
+  // Widget build(BuildContext context) {
+  //   return const Scaffold(
+  //     body: Center(
+  //       child: CircularProgressIndicator(color: const Color(0xFFFBC02D)),
+  //     ),
+  //   );
+  // }
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(color: const Color(0xFFFBC02D)),
+        child: Transform.scale(
+          scale: 1.5,
+          child: const CircularProgressIndicator(color: Color(0xFFFBC02D)),
+        ),
       ),
     );
   }
