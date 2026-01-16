@@ -21,7 +21,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     return Scaffold(
       body: Center(
         child: Transform.scale(
-          scale: 1.5,
+          scale: 1.2,
           child: const CircularProgressIndicator(color: Color(0xFFFBC02D)),
         ),
       ),
