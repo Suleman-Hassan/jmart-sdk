@@ -20,8 +20,137 @@ class _AskariEndPointState extends State<AskariEndPoint> {
   @override
   void initState() {
     super.initState();
-    _login();
+  // _login();
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+    _showLoginDialog();
+  });
   }
+
+  void _showLoginDialog() {
+  final emailController =
+      TextEditingController(text: "guest@gmail.com");
+  final passwordController =
+      TextEditingController(text: "Pakistan@123");
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 🔵 Icon
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue.withOpacity(0.1),
+                    ),
+                    child: const Icon(
+                      Icons.lock_outline,
+                      size: 40,
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  const Text(
+                    "Login Required",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  const Text(
+                    "Please confirm your credentials",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // 📧 Email
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      prefixIcon: const Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // 🔒 Password
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      prefixIcon: const Icon(Icons.lock),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Login Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              Navigator.pop(context);
+                              await _login();
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            )
+                          : const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   String _humanizeError(Object e) {
     if (e is DioException) {
