@@ -990,20 +990,20 @@ class _HomeCategoriesScreenState extends State<HomeCategoriesScreen> {
           );
           await _refreshAll();
         },
-        onLogout: () async {
-          Navigator.pop(context);
-          await _confirmLogout();
-        },
+        // onLogout: () async {
+        //   Navigator.pop(context);
+        //   await _confirmLogout();
+        // },
         onCart: () async {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const CartScreen()),
           );
         },
-        onDeleteAccount: () async {
-          Navigator.pop(context);
-          await _confirmDeleteAccount();
-        },
+        // onDeleteAccount: () async {
+        //   Navigator.pop(context);
+        //   await _confirmDeleteAccount();
+        // },
       ),
 
       appBar: PreferredSize(
@@ -1408,10 +1408,10 @@ class _AppDrawer extends StatefulWidget {
   final VoidCallback onHome;
   final VoidCallback onOrders;
   final VoidCallback onCart;
-  final VoidCallback onDeleteAccount;
+  // final VoidCallback onDeleteAccount;
   final VoidCallback onSupport;
   final VoidCallback onChangePassword;
-  final Future<void> Function() onLogout;
+  // final Future<void> Function() onLogout;
 
   const _AppDrawer({
     super.key,
@@ -1419,9 +1419,9 @@ class _AppDrawer extends StatefulWidget {
     required this.onOrders,
     required this.onSupport,
     required this.onChangePassword,
-    required this.onLogout,
+    // required this.onLogout,
     required this.onCart,
-    required this.onDeleteAccount,
+    // required this.onDeleteAccount,
   });
 
   @override
@@ -1508,21 +1508,21 @@ class _AppDrawerState extends State<_AppDrawer> {
                     title: const Text('Support'),
                     onTap: widget.onSupport,
                   ),
-                  if (_isDeleted.toLowerCase() == "yes")
-                    ListTile(
-                      leading: const Icon(Icons.delete),
-                      title: const Text('Delete Account'),
-                      onTap: widget.onDeleteAccount,
-                    ),
+                  // if (_isDeleted.toLowerCase() == "yes")
+                  //   ListTile(
+                  //     leading: const Icon(Icons.delete),
+                  //     title: const Text('Delete Account'),
+                  //     onTap: widget.onDeleteAccount,
+                  //   ),
                 ],
               ),
             ),
-            const Divider(height: 2),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: widget.onLogout,
-            ),
+           // const Divider(height: 2),
+            // ListTile(
+            //   leading: const Icon(Icons.logout),
+            //   title: const Text('Logout'),
+            //   onTap: widget.onLogout,
+            // ),
             SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
