@@ -391,22 +391,17 @@ class _AskariEndPointState extends State<AskariEndPoint> {
   }
 
   void getEmail() async {
-    final email = widget.userEmail ?? 'test11@gmail.com';
+    final email = widget.userEmail ?? 'test8@gmail.com';
 
     bool? exists = await checkEmailExists(email);
 
     if (exists == true) {
-      print('Email already exists - Direct login');
-      // Email exists to seedha login karo
-      await _loginExistingUser(email);
+      print('Email already exists - Login karo');
+      await _login(email);
     } else if (exists == false) {
-      print('Email available - Show password dialog');
-      // Email nahi hai to password dialog
+      print('Email available - Registration dialog show karo');
     } else {
       print('Error checking email');
-      if (mounted) {
-        ToastUtil.showCustomBottomSheet(context, 'Error checking email');
-      }
     }
   }
 
@@ -448,9 +443,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       print('Unexpected error: $e');
       return null;
     } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
+      setState(() => isLoading = false);
     }
   }
 
@@ -467,7 +460,6 @@ class _AskariEndPointState extends State<AskariEndPoint> {
 
       final dio = Dio();
 
-      // Username email se generate karo
       final username = email.split('@')[0];
 
       final formData = FormData.fromMap({
@@ -488,18 +480,14 @@ class _AskariEndPointState extends State<AskariEndPoint> {
 
       if (!mounted) return;
 
-      print('Response: ${json.encode(response.data)}');
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = response.data;
 
         if (responseData['status'] == true) {
-          // Session save karo
           await saveUserSession(responseData['data']);
 
           setState(() => isLoading = false);
 
-          // Home screen pe navigate karo
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const HomeCategoriesScreen()),
@@ -521,14 +509,11 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     } on DioException catch (e) {
       if (!mounted) return;
       setState(() => isLoading = false);
-      print('DioException: ${e.response?.data}');
       final msg = _humanizeError(e);
       ToastUtil.showCustomBottomSheet(context, msg);
-    } catch (e, stackTrace) {
+    } catch (e) {
       if (!mounted) return;
       setState(() => isLoading = false);
-      print('Error: $e');
-      print('StackTrace: $stackTrace');
       ToastUtil.showCustomBottomSheet(context, e.toString());
     }
   }
@@ -607,23 +592,24 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                         onPressed: isLoading
                             ? null
                             : () async {
-                          if (passwordController.text.trim().isEmpty) {
-                            ToastUtil.showCustomBottomSheet(
-                              context,
-                              'Please enter password',
-                            );
-                            return;
-                          }
-                          Navigator.pop(context);
-                          await _registerOrLogin(
-                            email: widget.userEmail ?? 'test11@gmail.com',
-                            password: passwordController.text.trim(),
-                            firstName: widget.firstName ?? 'User',
-                            lastName: widget.lastName ?? 'Guest',
-                            phoneNumber: widget.phoneNumber ?? '0000000000',
-                            cnic: widget.cnic ?? '0000000000',
-                          );
-                        },
+                                if (passwordController.text.trim().isEmpty) {
+                                  ToastUtil.showCustomBottomSheet(
+                                    context,
+                                    'Please enter password',
+                                  );
+                                  return;
+                                }
+                                Navigator.pop(context);
+                                await _registerOrLogin(
+                                  email: widget.userEmail ?? 'test8@gmail.com',
+                                  password: passwordController.text.trim(),
+                                  firstName: widget.firstName ?? 'User',
+                                  lastName: widget.lastName ?? 'Guest',
+                                  phoneNumber:
+                                      widget.phoneNumber ?? '0000000000',
+                                  cnic: widget.cnic ?? '12345-9812344-5',
+                                );
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFBC02D),
                           shape: RoundedRectangleBorder(
@@ -632,17 +618,17 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                         ),
                         child: isLoading
                             ? const CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        )
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )
                             : const Text(
-                          "Complete",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                                "Complete",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -668,47 +654,25 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     return e.toString();
   }
 
-  Future<void> _loginExistingUser(String email) async {
-    // Agar email already exist karti hai to yahan login API call karo
-    // Ya seedha home screen pe bhej do
-    print('Login existing user: $email');
-
-    setState(() => isLoading = false);
-
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeCategoriesScreen()),
-      );
-    }
+  Future<void> _login(String email) async {
+    // Ye method tab call hoga jab email already exist karti hai
+    // Yahan pe login API call karo
+    print('Login called for: $email');
+    // Your existing login logic
   }
 
-  Future<void> saveUserSession(Map<String, dynamic> userData) async {
-    try {
-      print('Saving user session...');
+  Future<void> saveUserSession(Map<String, dynamic> user) async {
+    final prefs = await SharedPreferences.getInstance();
+    final tokens = user['tokens'];
 
-      final prefs = await SharedPreferences.getInstance();
-
-      // Tokens directly userData mein hain
-      final tokens = userData['tokens'];
-
-      if (tokens != null) {
-        await prefs.setString('access_token', tokens['access'] ?? '');
-        await prefs.setString('refresh_token', tokens['refresh'] ?? '');
-      }
-
-      await prefs.setString('user_id', userData['id']?.toString() ?? '');
-      await prefs.setString('user_email', userData['email'] ?? '');
-      await prefs.setString('user_name', userData['full_name'] ?? '');
-      await prefs.setString('user_role', userData['role'] ?? '');
-      await prefs.setString('user_phone', userData['phone_number'] ?? '');
-      await prefs.setString('user_status', userData['status'] ?? '');
-
-      print('✅ Session saved successfully');
-    } catch (e, stackTrace) {
-      print('❌ Error saving session: $e');
-      print('StackTrace: $stackTrace');
-    }
+    await prefs.setString('access_token', tokens['access']);
+    await prefs.setString('refresh_token', tokens['refresh']);
+    await prefs.setString('user_id', user['id'].toString());
+    await prefs.setString('user_email', user['email']);
+    await prefs.setString('user_name', user['full_name']);
+    await prefs.setString('user_role', user['role']);
+    await prefs.setString('user_phone', user['phone_number'] ?? '');
+    await prefs.setString('user_status', user['status']);
   }
 
   @override
@@ -718,26 +682,26 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       body: Center(
         child: isLoading
             ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Transform.scale(
-              scale: 1.2,
-              child: const CircularProgressIndicator(
-                color: Color(0xFFFBC02D),
-                strokeWidth: 6,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        )
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Transform.scale(
+                    scale: 1.2,
+                    child: const CircularProgressIndicator(
+                      color: Color(0xFFFBC02D),
+                      strokeWidth: 6,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )
             : const SizedBox.shrink(),
       ),
     );
