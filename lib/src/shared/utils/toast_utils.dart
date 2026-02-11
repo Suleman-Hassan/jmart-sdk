@@ -25,11 +25,11 @@ class ToastUtil {
   }
 
   static void showCustomBottomSheet(
-      BuildContext context,
-      String message, {
-        IconData icon = Icons.error,
-        Color iconColor = Colors.red,
-      }) {
+    BuildContext context,
+    String message, {
+    IconData icon = Icons.error,
+    Color iconColor = Colors.red,
+  }) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -38,7 +38,8 @@ class ToastUtil {
         return Container(
           width: double.infinity,
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.8, // max 80% screen
+            maxHeight:
+                MediaQuery.of(context).size.height * 0.8, // max 80% screen
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -68,21 +69,23 @@ class ToastUtil {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text("OK", style: TextStyle(fontSize: 16, color: Colors.white)),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
         );
-
       },
     );
   }
 
   static Future<String?> getGuestEmail() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_email');//guest
+    return prefs.getString('user_email'); //guest
   }
 
   static Future<Map<String, dynamic>?> decodeToken() async {
@@ -103,13 +106,48 @@ class ToastUtil {
     Function()? onInvalid,
   }) async {
     Map<String, dynamic>? decodedToken = await decodeToken();
+
     if (decodedToken != null) {
       debugPrint("Token payload: $decodedToken");
-      if (onValid != null) onValid(decodedToken);
+
+      // ✅ Expiry check karo
+      final exp = decodedToken['exp'];
+      if (exp != null) {
+        final expiryTime = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+        final now = DateTime.now();
+
+        debugPrint("Token expiry: $expiryTime");
+        debugPrint("Current time: $now");
+
+        if (now.isBefore(expiryTime)) {
+          // Token valid hai
+          if (onValid != null) onValid(decodedToken);
+        } else {
+          // Token expired hai
+          debugPrint("Token has expired!");
+          if (onInvalid != null) onInvalid();
+        }
+      } else {
+        // Expiry field nahi mili
+        if (onValid != null) onValid(decodedToken);
+      }
     } else {
       debugPrint("Invalid or expired token.");
       if (onInvalid != null) onInvalid();
     }
   }
 
+  // static Future<void> checkToken({
+  //   Function(Map<String, dynamic>)? onValid,
+  //   Function()? onInvalid,
+  // }) async {
+  //   Map<String, dynamic>? decodedToken = await decodeToken();
+  //   if (decodedToken != null) {
+  //     debugPrint("Token payload: $decodedToken");
+  //     if (onValid != null) onValid(decodedToken);
+  //   } else {
+  //     debugPrint("Invalid or expired token.");
+  //     if (onInvalid != null) onInvalid();
+  //   }
+  // }
 }
