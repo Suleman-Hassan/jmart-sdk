@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,23 +41,25 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     }
   }
 
-
   Future<bool?> checkEmailExists(String email) async {
     try {
       var dio = Dio();
-      var response = await dio.get(
+
+      var data = FormData.fromMap({
+        'email': email,
+      });
+
+      var response = await dio.request(
         'http://192.168.100.90:1234/api/v1/auth/check-email/',
-        queryParameters: {
-          'email': email,
-        },
         options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          method: 'GET',
+          contentType: 'multipart/form-data',
         ),
+        data: data,
       );
 
       if (response.statusCode == 200) {
+        print(json.encode(response.data));
         bool exists = response.data['data']['exists'] ?? false;
         print('Email exists: $exists');
         return exists;
@@ -69,6 +73,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         print('Message: ${e.response?.data}');
       } else {
         print('Error: ${e.message}');
+        print('Type: ${e.type}');
       }
       return null;
 
