@@ -84,7 +84,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset('packages/jmart_sdk/assets/icons/success.png', height: 120),
+                  Image.asset(
+                    'packages/jmart_sdk/assets/icons/success.png',
+                    height: 120,
+                  ),
                   const SizedBox(height: 20),
                   Text(
                     message,
@@ -221,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'first_name': _nameCtrl.text,
         'last_name': _lastNameCtrl.text,
         'phone_number': _phoneCtrl.text.trim(),
-        'cnic':_cnicCtrl.text.replaceAll('-', ''),
+        'cnic': _cnicCtrl.text.replaceAll('-', ''),
         if (imageMultipart != null) 'profile_picture': imageMultipart,
       });
 
@@ -307,18 +310,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   child: CircleAvatar(
                                     radius: 50,
                                     backgroundColor: Colors.grey[300],
-                                    backgroundImage:
-                                        _selectedImage != null
-                                            ? FileImage(_selectedImage!)
-                                            : null,
-                                    child:
-                                        _selectedImage == null
-                                            ? const Icon(
-                                              Icons.camera_alt,
-                                              size: 40,
-                                              color: Colors.grey,
-                                            )
-                                            : null,
+                                    backgroundImage: _selectedImage != null
+                                        ? FileImage(_selectedImage!)
+                                        : null,
+                                    child: _selectedImage == null
+                                        ? const Icon(
+                                            Icons.camera_alt,
+                                            size: 40,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
                                   ),
                                 ),
                                 const SizedBox(height: 20),
@@ -422,12 +423,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           ? Icons.visibility_off
                                           : Icons.visibility,
                                     ),
-                                    onPressed:
-                                        _isLoading
-                                            ? null
-                                            : () => setState(() {
-                                              _obscure = !_obscure;
-                                            }),
+                                    onPressed: _isLoading
+                                        ? null
+                                        : () => setState(() {
+                                            _obscure = !_obscure;
+                                          }),
                                   ),
                                   validator: (v) {
                                     if (v == null || v.isEmpty) {
@@ -515,12 +515,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               decoration:
                                                   TextDecoration.underline,
                                             ),
-                                        recognizer:
-                                            TapGestureRecognizer()
-                                              ..onTap =
-                                                  _isLoading
-                                                      ? null
-                                                      : _onLoginTap,
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = _isLoading
+                                              ? null
+                                              : _onLoginTap,
                                       ),
                                     ],
                                   ),

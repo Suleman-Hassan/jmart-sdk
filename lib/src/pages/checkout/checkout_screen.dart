@@ -189,18 +189,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String _formatMoney(double v) => 'Rs. ${v.toStringAsFixed(0)}';
 
   Map<String, dynamic> _buildOrderPayload() {
-    final items =
-        _lines.map((l) {
-          final parsedId = int.tryParse(l.product.id);
-          return {
-            'product_detail': {
-              'id': parsedId ?? l.product.id,
-              'name': l.product.name,
-              'quantity': l.qty,
-              'price': double.parse(l.product.price.toStringAsFixed(2)),
-            },
-          };
-        }).toList();
+    final items = _lines.map((l) {
+      final parsedId = int.tryParse(l.product.id);
+      return {
+        'product_detail': {
+          'id': parsedId ?? l.product.id,
+          'name': l.product.name,
+          'quantity': l.qty,
+          'price': double.parse(l.product.price.toStringAsFixed(2)),
+        },
+      };
+    }).toList();
 
     final addr = _addressCtrl.text.trim();
     final street = _streetCtrl.text.trim();
@@ -221,8 +220,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         receiveTimeout: const Duration(seconds: 12),
         sendTimeout: const Duration(seconds: 12),
         responseType: ResponseType.json,
-        validateStatus:
-            (status) => status != null && status >= 200 && status < 600,
+        validateStatus: (status) =>
+            status != null && status >= 200 && status < 600,
       ),
     );
     return dio;
@@ -449,8 +448,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         // await _clearPersistedCart();
         // await _saveAddress();
         // _clearCart();
-        final message =
-            (resp.data is Map) ? (resp.data['message']) ?? "Confirmed" : null;
+        final message = (resp.data is Map)
+            ? (resp.data['message']) ?? "Confirmed"
+            : null;
         // final url = resp.data['data']['redirect_url'];
         // print(url);
         // final respData = resp.data['data'];
@@ -619,8 +619,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
       if (response.statusCode == 200 && response.data['status'] == true) {
         List data = response.data['data'];
-        final loadedZones =
-            data.map((item) => DeliveryZone.fromJson(item)).toList();
+        final loadedZones = data
+            .map((item) => DeliveryZone.fromJson(item))
+            .toList();
 
         // final prefs = await SharedPreferences.getInstance();
         // final savedZoneId = prefs.getInt(kSavedZoneId);
@@ -700,34 +701,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ? 'Loading zones...'
                           : 'Select saved area (optional)',
                     ),
-                    items:
-                        loading
-                            ? []
-                            : zones.map((zone) {
-                              return DropdownMenuItem<DeliveryZone>(
-                                value: zone,
-                                child: Text(zone.title),
+                    items: loading
+                        ? []
+                        : zones.map((zone) {
+                            return DropdownMenuItem<DeliveryZone>(
+                              value: zone,
+                              child: Text(zone.title),
+                            );
+                          }).toList(),
+                    onChanged: loading
+                        ? null
+                        : (v) async {
+                            setState(() {
+                              selectedPhase = v?.title ?? '';
+                              savedCharges = v?.deliveryCharges;
+                              _selectedZone = v;
+                            });
+                            final prefs = await SharedPreferences.getInstance();
+                            final email = await _getUserEmail();
+                            if (email != null) {
+                              await prefs.setInt(
+                                _getZoneKey(email),
+                                v?.id ?? 0,
                               );
-                            }).toList(),
-                    onChanged:
-                        loading
-                            ? null
-                            : (v) async {
-                              setState(() {
-                                selectedPhase = v?.title ?? '';
-                                savedCharges = v?.deliveryCharges;
-                                _selectedZone = v;
-                              });
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              final email = await _getUserEmail();
-                              if (email != null) {
-                                await prefs.setInt(
-                                  _getZoneKey(email),
-                                  v?.id ?? 0,
-                                );
-                              }
-                            },
+                            }
+                          },
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: const Color(0xFFF6F6F6),
@@ -741,9 +739,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   TextField(
                     controller: _addressCtrl,
                     maxLines: 2,
@@ -762,9 +758,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   TextField(
                     controller: _streetCtrl,
                     maxLines: 2,
@@ -783,9 +777,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   TextField(
                     controller: _housenoCtrl,
                     maxLines: 2,
@@ -807,7 +799,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ],
               ),
             ),
-
             // Payment + Promo
             const _SectionCard(
               child: Column(
@@ -820,7 +811,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
             // Items
             if (_lines.isEmpty)
               const Center(
@@ -838,9 +828,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (_, i) => _LineTile(line: _lines[i]),
               ),
-
             const SizedBox(height: 16),
-
             // Totals + Place Order
             Container(
               decoration: const BoxDecoration(
@@ -859,10 +847,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   const SizedBox(height: 6),
                   _TotalRow(
                     label: 'Delivery',
-                    value:
-                        savedCharges != null
-                            ? _formatMoney(double.tryParse(savedCharges!) ?? 0)
-                            : 'Rs. 0',
+                    value: savedCharges != null
+                        ? _formatMoney(double.tryParse(savedCharges!) ?? 0)
+                        : 'Rs. 0',
                   ),
                   const Divider(height: 24),
                   _TotalRow(
@@ -887,17 +874,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                       ),
                       onPressed: _submitting ? null : _placeOrder,
-                      child:
-                          _submitting
-                              ? const SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.black,
-                                ),
-                              )
-                              : const Text('Place Order'),
+                      child: _submitting
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.black,
+                              ),
+                            )
+                          : const Text('Place Order'),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -1239,6 +1225,7 @@ class _PaymentRowState extends State<_PaymentRow> {
             ),
           ],
         ),
+
         //
         // Row(
         //   children: [
@@ -1263,7 +1250,6 @@ class _PaymentRowState extends State<_PaymentRow> {
         //     ),
         //   ],
         // ),
-
         const SizedBox(height: 20),
 
         Text(
@@ -1349,14 +1335,13 @@ class _LineTile extends StatelessWidget {
               width: 56,
               height: 56,
               fit: BoxFit.cover,
-              errorBuilder:
-                  (_, __, ___) => Container(
-                    width: 56,
-                    height: 56,
-                    color: const Color(0xFFF3F4F6),
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.image_not_supported),
-                  ),
+              errorBuilder: (_, __, ___) => Container(
+                width: 56,
+                height: 56,
+                color: const Color(0xFFF3F4F6),
+                alignment: Alignment.center,
+                child: const Icon(Icons.image_not_supported),
+              ),
             ),
           ),
           const SizedBox(width: 12),

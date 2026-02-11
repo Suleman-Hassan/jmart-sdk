@@ -20,137 +20,186 @@ class _AskariEndPointState extends State<AskariEndPoint> {
   @override
   void initState() {
     super.initState();
-  // _login();
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-    _showLoginDialog();
-  });
+    // _login();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _showLoginDialog();
+    // });
+    getEmail();
+  }
+
+  void getEmail() async{
+    bool? exists = await checkEmailExists('test8@gmail.com');
+
+    if (exists == true) {
+      print('Email already exists');
+    } else if (exists == false) {
+      print('Email available');
+    } else {
+      print('Error checking email');
+    }
+  }
+
+
+  Future<bool?> checkEmailExists(String email) async {
+    try {
+      var dio = Dio();
+      var response = await dio.get(
+        'http://192.168.100.90:1234/api/v1/auth/check-email/',
+        queryParameters: {
+          'email': email,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        bool exists = response.data['data']['exists'] ?? false;
+        print('Email exists: $exists');
+        return exists;
+      }
+
+      return null;
+
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print('Error: ${e.response?.statusCode}');
+        print('Message: ${e.response?.data}');
+      } else {
+        print('Error: ${e.message}');
+      }
+      return null;
+
+    } catch (e) {
+      print('Unexpected error: $e');
+      return null;
+    }
   }
 
   void _showLoginDialog() {
-  final emailController =
-      TextEditingController(text: "guest@gmail.com");
-  final passwordController =
-      TextEditingController(text: "Pakistan@123");
+    final emailController = TextEditingController(text: "guest@gmail.com");
+    final passwordController = TextEditingController(text: "Pakistan@123");
 
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (context, setDialogState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // 🔵 Icon
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue.withOpacity(0.1),
-                    ),
-                    child: const Icon(
-                      Icons.lock_outline,
-                      size: 40,
-                      color: Colors.blue,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  const Text(
-                    "Login Required",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  const Text(
-                    "Please confirm your credentials",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // 📧 Email
-                  TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: "Email",
-                      prefixIcon: const Icon(Icons.email),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 🔵 Icon
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue.withOpacity(0.1),
+                      ),
+                      child: const Icon(
+                        Icons.lock_outline,
+                        size: 40,
+                        color: Colors.blue,
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
-                  // 🔒 Password
-                  TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      prefixIcon: const Icon(Icons.lock),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    const Text(
+                      "Login Required",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 6),
 
-                  // Login Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: isLoading
-                          ? null
-                          : () async {
-                              Navigator.pop(context);
-                              await _login();
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    const Text(
+                      "Please confirm your credentials",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // 📧 Email
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        prefixIcon: const Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            )
-                          : const Text(
-                              "Login",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
 
+                    const SizedBox(height: 12),
+
+                    // 🔒 Password
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        prefixIcon: const Icon(Icons.lock),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Login Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: isLoading
+                            ? null
+                            : () async {
+                                Navigator.pop(context);
+                                await _login();
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   String _humanizeError(Object e) {
     if (e is DioException) {
@@ -173,13 +222,12 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     setState(() => isLoading = true);
 
     try {
-      final postData = {
-        'email': username,
-        'password': pass,
-      };
+      final postData = {'email': username, 'password': pass};
 
-      final response =
-      await apiService.post(ApiConstants.loginUrl, data: postData);
+      final response = await apiService.post(
+        ApiConstants.loginUrl,
+        data: postData,
+      );
 
       if (!mounted) return;
 
@@ -193,9 +241,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (_) => const HomeCategoriesScreen(),
-            ),
+            MaterialPageRoute(builder: (_) => const HomeCategoriesScreen()),
           );
         } else {
           setState(() => isLoading = false);
@@ -206,10 +252,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         }
       } else {
         setState(() => isLoading = false);
-        ToastUtil.showCustomBottomSheet(
-          context,
-          'Invalid server response',
-        );
+        ToastUtil.showCustomBottomSheet(context, 'Invalid server response');
       }
     } catch (e) {
       if (!mounted) return;
@@ -238,12 +281,12 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       body: Center(
         child: isLoading
             ? Transform.scale(
-          scale: 1.2,
-          child: const CircularProgressIndicator(
-            color: Color(0xFFFBC02D),
-            strokeWidth: 6,
-          ),
-        )
+                scale: 1.2,
+                child: const CircularProgressIndicator(
+                  color: Color(0xFFFBC02D),
+                  strokeWidth: 6,
+                ),
+              )
             : const SizedBox.shrink(),
       ),
     );
