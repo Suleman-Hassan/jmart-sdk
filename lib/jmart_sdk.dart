@@ -7,9 +7,14 @@ class JMartSDK {
   static Future<void> launch(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        fullscreenDialog: true,
         builder: (context) => MyApp(),
       ),
     );
+    // await Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     fullscreenDialog: true,
+    //     builder: (context) => MyApp(),
+    //   ),
+    // );
   }
 }

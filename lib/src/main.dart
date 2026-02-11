@@ -12,15 +12,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'JMart',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+    return Theme(
+      data: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const AskariEndPoint(),
+      child: const AskariEndPoint(),
     );
   }
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     title: 'JMart',
+  //     debugShowCheckedModeBanner: false,
+  //     theme: ThemeData(
+  //       colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+  //     ),
+  //     home: const AskariEndPoint(),
+  //   );
+  // }
 }
 
 
