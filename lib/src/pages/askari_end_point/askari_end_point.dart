@@ -29,7 +29,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     getEmail();
   }
 
-  void getEmail() async{
+  void getEmail() async {
     bool? exists = await checkEmailExists('test8@gmail.com');
 
     if (exists == true) {
@@ -43,18 +43,14 @@ class _AskariEndPointState extends State<AskariEndPoint> {
 
   Future<bool?> checkEmailExists(String email) async {
     try {
+      setState(() => isLoading = true);
       var dio = Dio();
 
-      var data = FormData.fromMap({
-        'email': email,
-      });
+      var data = FormData.fromMap({'email': email});
 
       var response = await dio.request(
         'http://192.168.100.90:1234/api/v1/auth/check-email/',
-        options: Options(
-          method: 'GET',
-          contentType: 'multipart/form-data',
-        ),
+        options: Options(method: 'GET', contentType: 'multipart/form-data'),
         data: data,
       );
 
@@ -62,16 +58,13 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         print(json.encode(response.data));
         bool exists = response.data['data']['exists'] ?? false;
         print('Email exists: $exists');
-        if (exists == false){
-        // _showLoginDialog();
-        }else{
+        if (exists == false) {
           _showLoginDialog();
         }
         return exists;
       }
 
       return null;
-
     } on DioException catch (e) {
       if (e.response != null) {
         print('Error: ${e.response?.statusCode}');
@@ -81,16 +74,17 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         print('Type: ${e.type}');
       }
       return null;
-
     } catch (e) {
       print('Unexpected error: $e');
       return null;
+    }finally{
+      setState(() => isLoading = false);
     }
   }
 
   Future<void> _register() async {
     try {
-     // setState(() => _isLoading = true);
+      // setState(() => _isLoading = true);
 
       final dio = Dio();
       //
@@ -111,7 +105,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         'last_name': "",
         'phone_number': "",
         'cnic': "",
-     //  if (imageMultipart != null) 'profile_picture': imageMultipart,
+        //  if (imageMultipart != null) 'profile_picture': imageMultipart,
       });
 
       final response = await dio.post(ApiConstants.registerUrl, data: formData);
@@ -119,7 +113,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = response.data;
         if (responseData['status'] == true) {
-        //  customPrompt(responseData['message'] ?? 'Registration successful!');
+          //  customPrompt(responseData['message'] ?? 'Registration successful!');
         } else {
           ToastUtil.showCustomBottomSheet(
             context,
@@ -138,7 +132,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     } catch (e) {
       ToastUtil.showCustomBottomSheet(context, e.toString());
     } finally {
-    //  if (mounted) setState(() => _isLoading = false);
+      //  if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -171,7 +165,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                       child: const Icon(
                         Icons.lock_outline,
                         size: 40,
-                        color: Colors.blue,
+                        color: Color(0xFFFBC02D),
                       ),
                     ),
 
@@ -235,7 +229,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                                 await _login();
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Color(0xFFFBC02D),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
