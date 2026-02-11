@@ -31,6 +31,7 @@ class JMartSDK {
         String? firstName,
         String? lastName,
         String? phoneNumber,
+        String? cnic,
       }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -39,6 +40,7 @@ class JMartSDK {
           firstName: firstName,
           lastName: lastName,
           phoneNumber: phoneNumber,
+          cnic: cnic,
         ),
       ),
     );

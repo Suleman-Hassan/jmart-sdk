@@ -366,6 +366,7 @@ class AskariEndPoint extends StatefulWidget {
   final String? firstName;
   final String? lastName;
   final String? phoneNumber;
+  final String? cnic;
 
   const AskariEndPoint({
     super.key,
@@ -373,6 +374,7 @@ class AskariEndPoint extends StatefulWidget {
     this.firstName,
     this.lastName,
     this.phoneNumber,
+    this.cnic,
   });
 
   @override
@@ -451,13 +453,13 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     required String firstName,
     required String lastName,
     required String phoneNumber,
+    required String cnic,
   }) async {
     try {
       setState(() => isLoading = true);
 
       final dio = Dio();
 
-      // Username email se generate karo
       final username = email.split('@')[0];
 
       final formData = FormData.fromMap({
@@ -468,6 +470,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         'phone_number': phoneNumber,
         'password': password,
         'password_confirm': password,
+        'cnic': cnic,
       });
 
       final response = await dio.post(
@@ -481,12 +484,10 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         final responseData = response.data;
 
         if (responseData['status'] == true) {
-          // Session save karo
           await saveUserSession(responseData['data']);
 
           setState(() => isLoading = false);
 
-          // Home screen pe navigate karo
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const HomeCategoriesScreen()),
@@ -591,24 +592,24 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                         onPressed: isLoading
                             ? null
                             : () async {
-                          if (passwordController.text.trim().isEmpty) {
-                            ToastUtil.showCustomBottomSheet(
-                              context,
-                              'Please enter password',
-                            );
-                            return;
-                          }
-
-                          Navigator.pop(context);
-
-                          await _registerOrLogin(
-                            email: widget.userEmail ?? 'test8@gmail.com',
-                            password: passwordController.text.trim(),
-                            firstName: widget.firstName ?? 'User',
-                            lastName: widget.lastName ?? 'Guest',
-                            phoneNumber: widget.phoneNumber ?? '0000000000',
-                          );
-                        },
+                                if (passwordController.text.trim().isEmpty) {
+                                  ToastUtil.showCustomBottomSheet(
+                                    context,
+                                    'Please enter password',
+                                  );
+                                  return;
+                                }
+                                Navigator.pop(context);
+                                await _registerOrLogin(
+                                  email: widget.userEmail ?? 'test8@gmail.com',
+                                  password: passwordController.text.trim(),
+                                  firstName: widget.firstName ?? 'User',
+                                  lastName: widget.lastName ?? 'Guest',
+                                  phoneNumber:
+                                      widget.phoneNumber ?? '0000000000',
+                                  cnic: widget.cnic ?? '12345-9812344-5',
+                                );
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFBC02D),
                           shape: RoundedRectangleBorder(
@@ -617,17 +618,17 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                         ),
                         child: isLoading
                             ? const CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        )
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )
                             : const Text(
-                          "Complete",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                                "Complete",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -681,26 +682,26 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       body: Center(
         child: isLoading
             ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Transform.scale(
-              scale: 1.2,
-              child: const CircularProgressIndicator(
-                color: Color(0xFFFBC02D),
-                strokeWidth: 6,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        )
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Transform.scale(
+                    scale: 1.2,
+                    child: const CircularProgressIndicator(
+                      color: Color(0xFFFBC02D),
+                      strokeWidth: 6,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )
             : const SizedBox.shrink(),
       ),
     );
