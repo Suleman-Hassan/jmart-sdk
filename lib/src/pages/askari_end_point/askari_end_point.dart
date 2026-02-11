@@ -63,7 +63,9 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         bool exists = response.data['data']['exists'] ?? false;
         print('Email exists: $exists');
         if (exists == false){
-        _showLoginDialog();
+        // _showLoginDialog();
+        }else{
+          _showLoginDialog();
         }
         return exists;
       }
