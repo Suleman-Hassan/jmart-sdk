@@ -83,6 +83,60 @@ class _AskariEndPointState extends State<AskariEndPoint> {
     }
   }
 
+  Future<void> _register() async {
+    try {
+     // setState(() => _isLoading = true);
+
+      final dio = Dio();
+      //
+      // MultipartFile? imageMultipart;
+      // if (_selectedImage != null) {
+      //   imageMultipart = await MultipartFile.fromFile(
+      //     _selectedImage!.path,
+      //     filename: _selectedImage!.path.split('/').last,
+      //   );
+      // }
+
+      final formData = FormData.fromMap({
+        'username': "",
+        'email': "",
+        'password': "",
+        'password_confirm': "",
+        'first_name': "",
+        'last_name': "",
+        'phone_number': "",
+        'cnic': "",
+     //  if (imageMultipart != null) 'profile_picture': imageMultipart,
+      });
+
+      final response = await dio.post(ApiConstants.registerUrl, data: formData);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = response.data;
+        if (responseData['status'] == true) {
+        //  customPrompt(responseData['message'] ?? 'Registration successful!');
+        } else {
+          ToastUtil.showCustomBottomSheet(
+            context,
+            responseData['message'] ?? 'Registration failed',
+          );
+        }
+      } else {
+        ToastUtil.showCustomBottomSheet(
+          context,
+          "${response.statusMessage ?? 'Unknown error'}",
+        );
+      }
+    } on DioException catch (e) {
+      final msg = _humanizeError(e);
+      ToastUtil.showCustomBottomSheet(context, "$msg");
+    } catch (e) {
+      ToastUtil.showCustomBottomSheet(context, e.toString());
+    } finally {
+    //  if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   void _showLoginDialog() {
     final emailController = TextEditingController(text: "guest@gmail.com");
     final passwordController = TextEditingController(text: "Pakistan@123");
@@ -119,7 +173,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                     const SizedBox(height: 12),
 
                     const Text(
-                      "Login Required",
+                      "Complete your profile",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -187,7 +241,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                                 strokeWidth: 2,
                               )
                             : const Text(
-                                "Login",
+                                "Complete",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
