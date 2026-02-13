@@ -1,6 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'http://192.168.100.90:1234';
-  // static const String baseUrl = 'https://jmart.dhai-r.com.pk';
+  static const String baseUrl = 'https://jmart.dhai-r.com.pk';
   static const String loginUrl = '$baseUrl/api/v1/auth/login/';
   static const String registerUrl = '$baseUrl/api/v1/auth/register/';
   static const String logoutUrl = '$baseUrl/api/v1/auth/logout/';
@@ -23,3 +22,4 @@ class ApiConstants {
   static const String callBack = '$baseUrl/api/v1/jazzcash/callback/';
   static const String emailExist = '$baseUrl/api/v1/auth/check-email/';
 }
+
