@@ -20,6 +20,7 @@ class ApiConstants {
   static const String forgotPasswordUrl =
       '$baseUrl/api/v1/user/forgetpassword/';
   static const String callBack = '$baseUrl/api/v1/jazzcash/callback/';
-  static const String emailExist = '$baseUrl/api/v1/auth/check-email/';
+  static const String emailExistURL = '$baseUrl/api/v1/auth/check-email/';
+  static const String askariAuthURL = '$baseUrl/api/v1/auth/register-or-login/';
 }
 

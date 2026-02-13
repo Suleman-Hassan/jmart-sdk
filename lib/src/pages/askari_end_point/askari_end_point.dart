@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:jmart_sdk/src/core/constants/api_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/utils/toast_utils.dart';
 import '../categories/home_category.dart';
@@ -66,7 +67,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       var data = FormData.fromMap({'email': email});
 
       var response = await dio.request(
-        'http://192.168.100.90:1234/api/v1/auth/check-email/',
+       ApiConstants.emailExistURL,
         options: Options(method: 'GET', contentType: 'multipart/form-data'),
         data: data,
       );
@@ -127,7 +128,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       });
 
       final response = await dio.post(
-        'http://192.168.100.90:1234/api/v1/auth/register-or-login/',
+        ApiConstants.askariAuthURL,
         data: formData,
       );
 
