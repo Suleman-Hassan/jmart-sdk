@@ -37,12 +37,9 @@ class _AskariEndPointState extends State<AskariEndPoint> {
 
   void getEmail() async {
     final email = widget.userEmail ?? 'test8@gmail.com';
-
     bool? exists = await checkEmailExists(email);
-
     if (exists == true) {
-      print('Email already exists - Login karo');
-      //  await _login(email);
+      print('Email already exists');
       await _registerOrLogin(
         email: widget.userEmail ?? 'test8@gmail.com',
         password: '',
@@ -52,7 +49,6 @@ class _AskariEndPointState extends State<AskariEndPoint> {
         cnic: widget.cnic ?? '12345-9812344-5',
       );
     } else if (exists == false) {
-      print('Email available - Registration dialog show karo');
     } else {
       print('Error checking email');
     }
@@ -254,12 +250,12 @@ class _AskariEndPointState extends State<AskariEndPoint> {
                                 }
                                 Navigator.pop(context);
                                 await _registerOrLogin(
-                                  email: widget.userEmail ?? 'test8@gmail.com',
+                                  email: widget.userEmail ?? 'test@gmail.com',
                                   password: passwordController.text.trim(),
-                                  firstName: widget.firstName ?? 'User',
-                                  lastName: widget.lastName ?? 'Guest',
+                                  firstName: widget.firstName ?? 'Guest',
+                                  lastName: widget.lastName ?? 'User',
                                   phoneNumber:
-                                      widget.phoneNumber ?? '0000000000',
+                                      widget.phoneNumber ?? '03001234567',
                                   cnic: widget.cnic ?? '12345-9812344-5',
                                 );
                               },
@@ -305,13 +301,6 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       return e.message ?? 'Network error';
     }
     return e.toString();
-  }
-
-  Future<void> _login(String email) async {
-    // Ye method tab call hoga jab email already exist karti hai
-    // Yahan pe login API call karo
-    print('Login called for: $email');
-    // Your existing login logic
   }
 
   Future<void> saveUserSession(Map<String, dynamic> user) async {
