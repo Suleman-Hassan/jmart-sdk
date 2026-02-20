@@ -982,14 +982,14 @@ class _HomeCategoriesScreenState extends State<HomeCategoriesScreen> {
           );
           await _refreshAll();
         },
-        onChangePassword: () async {
-          Navigator.pop(context);
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const ChangePassword()),
-          );
-          await _refreshAll();
-        },
+        // onChangePassword: () async {
+        //   Navigator.pop(context);
+        //   await Navigator.push(
+        //     context,
+        //     MaterialPageRoute(builder: (_) => const ChangePassword()),
+        //   );
+        //   await _refreshAll();
+        // },
         // onLogout: () async {
         //   Navigator.pop(context);
         //   await _confirmLogout();
@@ -1410,7 +1410,7 @@ class _AppDrawer extends StatefulWidget {
   final VoidCallback onCart;
   // final VoidCallback onDeleteAccount;
   final VoidCallback onSupport;
-  final VoidCallback onChangePassword;
+  // final VoidCallback onChangePassword;
   // final Future<void> Function() onLogout;
 
   const _AppDrawer({
@@ -1418,7 +1418,7 @@ class _AppDrawer extends StatefulWidget {
     required this.onHome,
     required this.onOrders,
     required this.onSupport,
-    required this.onChangePassword,
+    // required this.onChangePassword,
     // required this.onLogout,
     required this.onCart,
     // required this.onDeleteAccount,
@@ -1498,11 +1498,11 @@ class _AppDrawerState extends State<_AppDrawer> {
                     title: const Text('My Cart'),
                     onTap: widget.onCart,
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.password),
-                    title: const Text('Change Password'),
-                    onTap: widget.onChangePassword,
-                  ),
+                  // ListTile(
+                  //   leading: const Icon(Icons.password),
+                  //   title: const Text('Change Password'),
+                  //   onTap: widget.onChangePassword,
+                  // ),
                   ListTile(
                     leading: const Icon(Icons.support_agent_outlined),
                     title: const Text('Support'),

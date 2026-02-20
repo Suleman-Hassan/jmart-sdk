@@ -42,14 +42,13 @@ class _AskariEndPointState extends State<AskariEndPoint> {
 
     if (exists == true) {
       print('Email already exists - Login karo');
-   //  await _login(email);
+      //  await _login(email);
       await _registerOrLogin(
         email: widget.userEmail ?? 'test8@gmail.com',
         password: '',
         firstName: widget.firstName ?? 'User',
         lastName: widget.lastName ?? 'Guest',
-        phoneNumber:
-        widget.phoneNumber ?? '0000000000',
+        phoneNumber: widget.phoneNumber ?? '0000000000',
         cnic: widget.cnic ?? '12345-9812344-5',
       );
     } else if (exists == false) {
@@ -67,7 +66,7 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       var data = FormData.fromMap({'email': email});
 
       var response = await dio.request(
-       ApiConstants.emailExistURL,
+        ApiConstants.emailExistURL,
         options: Options(method: 'GET', contentType: 'multipart/form-data'),
         data: data,
       );
