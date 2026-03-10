@@ -668,11 +668,11 @@ class _ProductScreenState extends State<ProductScreen> {
           const EdgeInsets.fromLTRB(12, 12, 12, 120),
           itemCount: filteredItems.length,
           gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
+           SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
-            childAspectRatio: 0.57,
+            mainAxisExtent: MediaQuery.of(context).size.height * 0.35,
           ),
           itemBuilder: (_, i) {
             final p = filteredItems[i];
