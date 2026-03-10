@@ -672,9 +672,10 @@ class _ProductScreenState extends State<ProductScreen> {
             crossAxisCount: 2,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
-             mainAxisExtent: MediaQuery.of(context).size.height < 700
+             mainAxisExtent:
+             MediaQuery.of(context).size.height < 800
                  ? MediaQuery.of(context).size.height * 0.42
-                 : MediaQuery.of(context).size.height * 0.36,
+                 : MediaQuery.of(context).size.height * 0.40,
           ),
           itemBuilder: (_, i) {
             final p = filteredItems[i];
