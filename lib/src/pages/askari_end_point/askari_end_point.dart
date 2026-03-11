@@ -174,117 +174,126 @@ class _AskariEndPointState extends State<AskariEndPoint> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Icon
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue.withOpacity(0.1),
-                      ),
-                      child: const Icon(
-                        Icons.lock_outline,
-                        size: 40,
-                        color: Color(0xFFFBC02D),
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    const Text(
-                      "Complete your profile",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 6),
-
-                    const Text(
-                      "Please set your password",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Password
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        prefixIcon: const Icon(Icons.lock),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) {
+            if (!didPop) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }
+          },
+          child: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Icon
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue.withOpacity(0.1),
+                        ),
+                        child: const Icon(
+                          Icons.lock_outline,
+                          size: 40,
+                          color: Color(0xFFFBC02D),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 12),
 
-                    // Complete Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: isLoading
-                            ? null
-                            : () async {
-                                if (passwordController.text.trim().isEmpty) {
-                                  ToastUtil.showCustomBottomSheet(
-                                    context,
-                                    'Please enter password',
-                                  );
-                                  return;
-                                }
-                                Navigator.pop(context);
-                                await _registerOrLogin(
-                                  email: widget.userEmail ?? 'test@gmail.com',
-                                  password: passwordController.text.trim(),
-                                  firstName: widget.firstName ?? 'Guest',
-                                  lastName: widget.lastName ?? 'User',
-                                  phoneNumber:
-                                      widget.phoneNumber ?? '03001234567',
-                                  cnic: widget.cnic ?? '12345-9812344-5',
-                                );
-                              },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFBC02D),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                      const Text(
+                        "Complete your profile",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      const Text(
+                        "Please set your password",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Password
+                      TextField(
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          prefixIcon: const Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              )
-                            : const Text(
-                                "Complete",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
                       ),
-                    ),
-                  ],
+
+                      const SizedBox(height: 24),
+
+                      // Complete Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  if (passwordController.text.trim().isEmpty) {
+                                    ToastUtil.showCustomBottomSheet(
+                                      context,
+                                      'Please enter password',
+                                    );
+                                    return;
+                                  }
+                                  Navigator.pop(context);
+                                  await _registerOrLogin(
+                                    email: widget.userEmail ?? 'test@gmail.com',
+                                    password: passwordController.text.trim(),
+                                    firstName: widget.firstName ?? 'Guest',
+                                    lastName: widget.lastName ?? 'User',
+                                    phoneNumber:
+                                        widget.phoneNumber ?? '03001234567',
+                                    cnic: widget.cnic ?? '12345-9812344-5',
+                                  );
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFBC02D),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                )
+                              : const Text(
+                                  "Complete",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );
